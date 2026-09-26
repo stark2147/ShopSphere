@@ -1,5 +1,5 @@
 package com.shopsphere.backend.config;
-
+import org.springframework.beans.factory.annotation.Value;
 import com.shopsphere.backend.security.CustomUserDetailsService;
 import com.shopsphere.backend.security.JwtAuthenticationFilter;
 
@@ -42,7 +42,8 @@ public class SecurityConfig {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
-
+    @Value("${app.cors.allowed-origin:http://localhost:5173}")
+    private String allowedOrigin;
     // ============================================================
     // PASSWORD ENCODER
     // ============================================================
@@ -306,15 +307,13 @@ public class SecurityConfig {
     // ============================================================
     // CORS CONFIGURATION
     // ============================================================
-
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
 
-        CorsConfiguration configuration =
-                new CorsConfiguration();
+        CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOrigins(
-                List.of("http://localhost:5173")
+                List.of(allowedOrigin)
         );
 
         configuration.setAllowedMethods(
@@ -343,4 +342,5 @@ public class SecurityConfig {
 
         return source;
     }
+
 }
