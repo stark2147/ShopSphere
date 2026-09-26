@@ -69,3 +69,6 @@ Thumbs.db
 
 # Database dumps
 *.sql
+
+# Build artifacts
+backend/app.jar
