@@ -1,8 +1,33 @@
-FROM eclipse-temurin:17-jdk
+# =====================================================
+# STAGE 1 — BUILD SPRING BOOT APPLICATION
+# =====================================================
+
+FROM eclipse-temurin:17-jdk AS build
 
 WORKDIR /app
 
-COPY target/backend-0.0.1-SNAPSHOT.jar app.jar
+COPY .mvn .mvn
+COPY mvnw .
+COPY pom.xml .
+
+RUN chmod +x mvnw
+
+RUN ./mvnw dependency:go-offline -DskipTests
+
+COPY src src
+
+RUN ./mvnw clean package -DskipTests
+
+
+# =====================================================
+# STAGE 2 — RUN SPRING BOOT APPLICATION
+# =====================================================
+
+FROM eclipse-temurin:17-jre
+
+WORKDIR /app
+
+COPY --from=build /app/target/backend-0.0.1-SNAPSHOT.jar app.jar
 
 EXPOSE 8080
 
