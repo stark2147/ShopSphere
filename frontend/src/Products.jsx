@@ -12,6 +12,10 @@ function Products() {
     const [sortOption, setSortOption] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("");
 
+    const [aiSearchQuery, setAiSearchQuery] = useState("");
+    const [aiSearching, setAiSearching] = useState(false);
+    const [aiSearchMode, setAiSearchMode] = useState(false);
+
     // Price filters
     const [minPrice, setMinPrice] = useState("");
     const [maxPrice, setMaxPrice] = useState("");
@@ -123,9 +127,67 @@ function Products() {
         setMinPrice("");
         setMaxPrice("");
         setStockFilter("");
+
+        setAiSearchQuery("");
+        setAiSearchMode(false);
+
         loadProducts();
     };
 
+    // =========================
+// AI NATURAL LANGUAGE SEARCH
+// =========================
+    const aiSearchProducts = async () => {
+
+        if (aiSearchQuery.trim() === "") {
+            return;
+        }
+
+        try {
+
+            setAiSearching(true);
+            setAiSearchMode(true);
+
+            const response = await api.post(
+                "/api/ai/search",
+                {
+                    query: aiSearchQuery.trim()
+                }
+            );
+
+            console.log(
+                "AI search results:",
+                response.data
+            );
+
+            setProducts(response.data);
+
+        } catch (error) {
+
+            console.error(
+                "AI search failed:",
+                error
+            );
+
+            alert(
+                "AI search is temporarily unavailable. Please try again."
+            );
+
+        } finally {
+
+            setAiSearching(false);
+        }
+    };
+    // =========================
+// CLEAR AI SEARCH
+// =========================
+    const clearAiSearch = () => {
+
+        setAiSearchQuery("");
+        setAiSearchMode(false);
+
+        loadProducts();
+    };
     // =========================
     // ADD TO CART
     // =========================
@@ -429,6 +491,76 @@ function Products() {
 ========================= */}
 
             <section className="products-toolbar">
+
+                {/* =========================
+    AI NATURAL LANGUAGE SEARCH
+========================= */}
+
+                <div className="ai-products-search">
+
+                    <div className="ai-products-search-header">
+
+                        <div>
+            <span className="ai-products-search-badge">
+                ✨ AI SEARCH
+            </span>
+
+                            <h3>
+                                Search naturally
+                            </h3>
+
+                            <p>
+                                Try: "gaming laptop under ₹700000"
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <div className="ai-products-search-input">
+
+                        <input
+                            type="text"
+                            placeholder="Try 'Samsung phone under 40000'..."
+                            value={aiSearchQuery}
+                            onChange={(event) =>
+                                setAiSearchQuery(event.target.value)
+                            }
+                            onKeyDown={(event) => {
+
+                                if (event.key === "Enter") {
+                                    aiSearchProducts();
+                                }
+
+                            }}
+                        />
+
+                        <button
+                            type="button"
+                            className="ai-products-search-button"
+                            onClick={aiSearchProducts}
+                            disabled={
+                                aiSearching ||
+                                aiSearchQuery.trim() === ""
+                            }
+                        >
+                            {aiSearching
+                                ? "✨ Searching..."
+                                : "✨ AI Search"}
+                        </button>
+
+                        {aiSearchMode && (
+                            <button
+                                type="button"
+                                className="ai-products-clear-button"
+                                onClick={clearAiSearch}
+                            >
+                                Clear
+                            </button>
+                        )}
+
+                    </div>
+
+                </div>
 
                 {/* SEARCH */}
 

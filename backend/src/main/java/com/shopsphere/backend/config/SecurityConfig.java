@@ -136,7 +136,36 @@ public class SecurityConfig {
                         )
                         .permitAll()
 
+                                .requestMatchers(
+                                        HttpMethod.POST,
+                                        "/api/ai/products/index"
+                                ).hasRole("ADMIN")
 
+                                .requestMatchers(
+                                        HttpMethod.POST,
+                                        "/api/ai/search"
+                                )
+                                .permitAll()
+
+                                .requestMatchers(
+                                        HttpMethod.GET,
+                                        "/api/ai/ask"
+                                )
+                                .permitAll()
+
+                                .requestMatchers(
+                                        HttpMethod.POST,
+                                        "/api/ai/products/generate-description"
+                                ).hasRole("SELLER")
+
+                                .requestMatchers(
+                                        HttpMethod.POST,
+                                        "/api/ai/shopping/ask"
+                                )
+                                .permitAll()
+
+                                .requestMatchers("/error").permitAll()
+                        
                         // ====================================================
                         // ADMIN ENDPOINTS
                         // ====================================================

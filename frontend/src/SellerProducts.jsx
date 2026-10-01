@@ -92,7 +92,13 @@ const SellerProducts = () => {
         categoryId: "",
         imageUrl: ""
     });
+    const [aiKeyPoints, setAiKeyPoints] = useState("");
 
+    const [generatingDescription, setGeneratingDescription] =
+        useState(false);
+
+    const [aiDescriptionError, setAiDescriptionError] =
+        useState("");
 
     // =====================================================
     // LOAD SELLER + PRODUCTS + CATEGORIES
@@ -320,7 +326,8 @@ const SellerProducts = () => {
             price: "",
             stockQuantity: "",
             categoryId: "",
-            imageUrl: ""
+            imageUrl: "",
+
         });
 
         setEditingProduct(null);
@@ -331,6 +338,9 @@ const SellerProducts = () => {
         setImageUploadPreview("");
 
         setShowForm(false);
+        setAiKeyPoints("");
+        setGeneratingDescription(false);
+        setAiDescriptionError("");
 
     };
 
@@ -350,6 +360,9 @@ const SellerProducts = () => {
         setImagePreviewError(false);
         setImageFile(null);
         setImageUploadPreview("");
+        setAiKeyPoints("");
+        setGeneratingDescription(false);
+        setAiDescriptionError("");
 
         setFormData({
             name: "",
@@ -387,6 +400,9 @@ const SellerProducts = () => {
         setImagePreviewError(false);
         setImageFile(null);
         setImageUploadPreview(product.imageUrl || "");
+        setAiKeyPoints("");
+        setGeneratingDescription(false);
+        setAiDescriptionError("");
 
         setFormData({
             name: product.name || "",
@@ -448,6 +464,109 @@ const SellerProducts = () => {
     // =====================================================
     // SAVE PRODUCT
     // =====================================================
+    // =====================================================
+// GENERATE AI PRODUCT DESCRIPTION
+// =====================================================
+
+    const handleGenerateAiDescription = async () => {
+
+        setAiDescriptionError("");
+
+        if (!formData.name.trim()) {
+
+            setAiDescriptionError(
+                "Please enter the product name first."
+            );
+
+            return;
+        }
+
+        if (!formData.categoryId) {
+
+            setAiDescriptionError(
+                "Please select a category first."
+            );
+
+            return;
+        }
+
+        if (!aiKeyPoints.trim()) {
+
+            setAiDescriptionError(
+                "Please enter a few key product points first."
+            );
+
+            return;
+        }
+
+        const selectedCategory =
+            categories.find(
+                (category) =>
+                    String(category.id) ===
+                    String(formData.categoryId)
+            );
+
+        const categoryName =
+            selectedCategory?.name || "General";
+
+        try {
+
+            setGeneratingDescription(true);
+
+            const response =
+                await api.post(
+                    "/api/ai/products/generate-description",
+                    {
+                        productName:
+                            formData.name.trim(),
+
+                        category:
+                        categoryName,
+
+                        keyPoints:
+                            aiKeyPoints.trim()
+                    }
+                );
+
+            setFormData((previousData) => ({
+                ...previousData,
+                description:
+                response.data
+            }));
+
+        } catch (error) {
+
+            console.error(
+                "AI description generation failed:",
+                error
+            );
+
+            if (error.response?.status === 403) {
+
+                setAiDescriptionError(
+                    "You must be logged in as a seller to use AI description generation."
+                );
+
+            } else if (error.response?.status === 429) {
+
+                setAiDescriptionError(
+                    "AI usage limit reached. Please try again later."
+                );
+
+            } else {
+
+                setAiDescriptionError(
+                    "AI description generation failed. Please try again later."
+                );
+            }
+
+        } finally {
+
+            setGeneratingDescription(false);
+
+        }
+    };
+
 
     const handleSaveProduct = async (event) => {
 
@@ -525,7 +644,6 @@ const SellerProducts = () => {
                 finalImageUrl
 
             };
-
 
             // -------------------------------------------------
             // BASIC FRONTEND VALIDATION
@@ -2100,7 +2218,43 @@ const SellerProducts = () => {
                                 {/* DESCRIPTION */}
 
                                 <div className="seller-form-field seller-form-field-full">
+                                    {/* =====================================================
+    AI PRODUCT DESCRIPTION
+===================================================== */}
 
+                                    <div className="ai-description-section">
+
+                                        <label>
+                                            Key Product Points
+                                        </label>
+
+                                        <textarea
+                                            value={aiKeyPoints}
+                                            onChange={(event) =>
+                                                setAiKeyPoints(event.target.value)
+                                            }
+                                            placeholder="Example: Intel Core i7, 16GB RAM, 512GB SSD, suitable for gaming and coding"
+                                            rows="4"
+                                        />
+
+                                        <button
+                                            type="button"
+                                            className="ai-generate-button"
+                                            onClick={handleGenerateAiDescription}
+                                            disabled={generatingDescription}
+                                        >
+                                            {generatingDescription
+                                                ? "Generating..."
+                                                : "✨ Generate AI Description"}
+                                        </button>
+
+                                        {aiDescriptionError && (
+                                            <p className="ai-description-error">
+                                                {aiDescriptionError}
+                                            </p>
+                                        )}
+
+                                    </div>
                                     <label>
                                         Description
                                     </label>

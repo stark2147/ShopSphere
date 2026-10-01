@@ -38,6 +38,8 @@ import AdminReviews from "./AdminReviews";
 
 import Notifications from "./Notifications";
 import StorePage from "./StorePage";
+import AiShoppingAssistant from "./AiShoppingAssistant";
+
 
 function Home() {
 
@@ -103,15 +105,12 @@ function Home() {
 
         };
 
-        // Load immediately
         loadUnreadCount();
 
-        // Refresh every 30 seconds
         const interval = setInterval(() => {
             loadUnreadCount();
         }, 30000);
 
-        // Cleanup interval when Home is removed
         return () => {
             clearInterval(interval);
         };
@@ -258,7 +257,7 @@ function Home() {
 
 
                     <Link to="/wishlist">
-                        Wishlist ❤️
+                        Wishlist
                     </Link>
 
 
@@ -697,14 +696,14 @@ function Home() {
                                     ) : (
 
                                         <span className="product-placeholder-icon">
-            🛍️
-        </span>
+                                            🛍️
+                                        </span>
 
                                     )}
 
                                     <span className="product-badge">
-        Featured
-    </span>
+                                        Featured
+                                    </span>
 
                                 </div>
 
@@ -1001,212 +1000,228 @@ function App() {
 
     return (
 
-        <Routes>
+        <>
 
-            {/* ================= CUSTOMER ================= */}
+            <Routes>
 
-            <Route
-                path="/"
-                element={<Home />}
-            />
+                {/* ================= CUSTOMER ================= */}
 
-            <Route
-                path="/login"
-                element={<Login />}
-            />
+                <Route
+                    path="/"
+                    element={<Home />}
+                />
 
-            <Route
-                path="/profile"
-                element={<Profile />}
-            />
+                <Route
+                    path="/login"
+                    element={<Login />}
+                />
 
-            <Route
-                path="/cart"
-                element={<Cart />}
-            />
+                <Route
+                    path="/profile"
+                    element={<Profile />}
+                />
 
-            <Route
-                path="/checkout"
-                element={<Checkout />}
-            />
+                <Route
+                    path="/cart"
+                    element={<Cart />}
+                />
 
-            <Route
-                path="/order-success"
-                element={<OrderSuccess />}
-            />
+                <Route
+                    path="/checkout"
+                    element={<Checkout />}
+                />
 
-            <Route
-                path="/orders"
-                element={<Orders />}
-            />
+                <Route
+                    path="/order-success"
+                    element={<OrderSuccess />}
+                />
 
-            <Route
-                path="/orders/:id"
-                element={<OrderDetails />}
-            />
+                <Route
+                    path="/orders"
+                    element={<Orders />}
+                />
 
-            <Route
-                path="/products"
-                element={<Products />}
-            />
+                <Route
+                    path="/orders/:id"
+                    element={<OrderDetails />}
+                />
 
-            <Route
-                path="/products/:id"
-                element={<ProductDetails />}
-            />
+                <Route
+                    path="/products"
+                    element={<Products />}
+                />
 
-            <Route
-                path="/wishlist"
-                element={<Wishlist />}
-            />
+                <Route
+                    path="/products/:id"
+                    element={<ProductDetails />}
+                />
 
-            <Route
-                path="/addresses"
-                element={<Addresses />}
-            />
+                <Route
+                    path="/wishlist"
+                    element={<Wishlist />}
+                />
 
-            <Route
-                path="/notifications"
-                element={<Notifications />}
-            />
+                <Route
+                    path="/addresses"
+                    element={<Addresses />}
+                />
 
-
-            {/* ================= SELLER ================= */}
-
-            <Route
-                path="/seller"
-                element={<SellerHome />}
-            />
-
-            <Route
-                path="/seller/dashboard"
-                element={<SellerDashboard />}
-            />
-
-            <Route
-                path="/seller/products"
-                element={<SellerProducts />}
-            />
-
-            <Route
-                path="/seller/orders"
-                element={<SellerOrders />}
-            />
-
-            <Route
-                path="/seller/reviews"
-                element={<SellerReviews />}
-            />
-
-            <Route
-                path="/seller/profile"
-                element={<SellerProfile />}
-            />
+                <Route
+                    path="/notifications"
+                    element={<Notifications />}
+                />
 
 
-            {/* ================= ADMIN ================= */}
+                {/* ================= SELLER ================= */}
 
-            <Route
-                path="/admin"
-                element={
-                    <AdminRoute>
-                        <AdminDashboard />
-                    </AdminRoute>
-                }
-            />
+                <Route
+                    path="/seller"
+                    element={<SellerHome />}
+                />
 
-            <Route
-                path="/admin/products"
-                element={
-                    <AdminRoute>
-                        <AdminProducts />
-                    </AdminRoute>
-                }
-            />
+                <Route
+                    path="/seller/dashboard"
+                    element={<SellerDashboard />}
+                />
 
-            <Route
-                path="/admin/products/:id"
-                element={
-                    <AdminRoute>
-                        <AdminProductDetails />
-                    </AdminRoute>
-                }
-            />
+                <Route
+                    path="/seller/products"
+                    element={<SellerProducts />}
+                />
 
-            <Route
-                path="/admin/orders"
-                element={
-                    <AdminRoute>
-                        <AdminOrders />
-                    </AdminRoute>
-                }
-            />
+                <Route
+                    path="/seller/orders"
+                    element={<SellerOrders />}
+                />
 
-            <Route
-                path="/admin/orders/:id"
-                element={
-                    <AdminRoute>
-                        <AdminOrderDetails />
-                    </AdminRoute>
-                }
-            />
+                <Route
+                    path="/seller/reviews"
+                    element={<SellerReviews />}
+                />
 
-            <Route
-                path="/admin/users"
-                element={
-                    <AdminRoute>
-                        <AdminUsers />
-                    </AdminRoute>
-                }
-            />
+                <Route
+                    path="/seller/profile"
+                    element={<SellerProfile />}
+                />
 
-            <Route
-                path="/admin/users/:id"
-                element={
-                    <AdminRoute>
-                        <AdminUserDetails />
-                    </AdminRoute>
-                }
-            />
 
-            <Route
-                path="/admin/sellers"
-                element={
-                    <AdminRoute>
-                        <AdminSellers />
-                    </AdminRoute>
-                }
-            />
+                {/* ================= ADMIN ================= */}
 
-            <Route
-                path="/admin/sellers/:id"
-                element={
-                    <AdminRoute>
-                        <AdminSellerDetails />
-                    </AdminRoute>
-                }
-            />
+                <Route
+                    path="/admin"
+                    element={
+                        <AdminRoute>
+                            <AdminDashboard />
+                        </AdminRoute>
+                    }
+                />
 
-            <Route
-                path="/admin/reviews"
-                element={
-                    <AdminRoute>
-                        <AdminReviews />
-                    </AdminRoute>
-                }
-            />
-            <Route
-                path="/store/:sellerId"
-                element={<StorePage />}
-            />
-            <Route path="/register" element={<Register />} />
+                <Route
+                    path="/admin/products"
+                    element={
+                        <AdminRoute>
+                            <AdminProducts />
+                        </AdminRoute>
+                    }
+                />
 
-            <Route
-                path="/seller/register"
-                element={<SellerRegister />}
-            />
+                <Route
+                    path="/admin/products/:id"
+                    element={
+                        <AdminRoute>
+                            <AdminProductDetails />
+                        </AdminRoute>
+                    }
+                />
 
-        </Routes>
+                <Route
+                    path="/admin/orders"
+                    element={
+                        <AdminRoute>
+                            <AdminOrders />
+                        </AdminRoute>
+                    }
+                />
+
+                <Route
+                    path="/admin/orders/:id"
+                    element={
+                        <AdminRoute>
+                            <AdminOrderDetails />
+                        </AdminRoute>
+                    }
+                />
+
+                <Route
+                    path="/admin/users"
+                    element={
+                        <AdminRoute>
+                            <AdminUsers />
+                        </AdminRoute>
+                    }
+                />
+
+                <Route
+                    path="/admin/users/:id"
+                    element={
+                        <AdminRoute>
+                            <AdminUserDetails />
+                        </AdminRoute>
+                    }
+                />
+
+                <Route
+                    path="/admin/sellers"
+                    element={
+                        <AdminRoute>
+                            <AdminSellers />
+                        </AdminRoute>
+                    }
+                />
+
+                <Route
+                    path="/admin/sellers/:id"
+                    element={
+                        <AdminRoute>
+                            <AdminSellerDetails />
+                        </AdminRoute>
+                    }
+                />
+
+                <Route
+                    path="/admin/reviews"
+                    element={
+                        <AdminRoute>
+                            <AdminReviews />
+                        </AdminRoute>
+                    }
+                />
+
+                <Route
+                    path="/store/:sellerId"
+                    element={<StorePage />}
+                />
+
+                <Route
+                    path="/register"
+                    element={<Register />}
+                />
+
+                <Route
+                    path="/seller/register"
+                    element={<SellerRegister />}
+                />
+
+            </Routes>
+
+
+            {/* =====================================================
+                FLOATING AI ASSISTANT
+            ===================================================== */}
+
+            <AiShoppingAssistant />
+
+        </>
 
     );
 
