@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import api from "./api";
 import "./App.css";
 
@@ -273,12 +274,13 @@ const AiShoppingAssistant = () => {
                                                                         className="ai-popup-product-link-container"
                                                                     >
 
-                                                                        <a
-                                                                            href={`/products/${productId}`}
-                                                                            className="ai-popup-product-link"
+                                                                        <Link
+                                                                            to={`/products/${productId}`}
+                                                                            className="ai-product-link"
+                                                                            onClick={() => setIsOpen(false)}
                                                                         >
                                                                             View Product
-                                                                        </a>
+                                                                        </Link>
 
                                                                     </div>
 
